@@ -1,0 +1,14 @@
+# Data
+data/
+*.csv
+*.xlsx
+*.json
+# System & IDE
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+.env
+.vscode/
+# Python
+*.pyc
+venv/
