@@ -1,105 +1,117 @@
-# 🏔️ The North Face E-Commerce : Boosting Online Sales
+# The North Face E-Commerce -- Recommandation et Topic Modeling
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/scikit_learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
-![Spacy](https://img.shields.io/badge/SpaCy-09A3D5?style=for-the-badge&logo=spacy&logoColor=white)
-![Git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat&logo=python&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626?style=flat&logo=jupyter&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
+![spaCy](https://img.shields.io/badge/spaCy-09A3D5?style=flat&logo=spacy&logoColor=white)
 
-## 📋 Contexte du Projet
+## About
 
-**The North Face**, leader de l'équipement outdoor, souhaite exploiter son catalogue de produits pour augmenter le panier moyen de ses clients. Le département marketing a identifié deux leviers de croissance basés sur la Data Science :
+The North Face souhaite exploiter les descriptions de son catalogue produit pour :
 
-1.  **Système de Recommandation (Cross-Selling)** : Suggérer des produits similaires à un client naviguant sur une page produit (ex: "Vous aimerez aussi...").
-2.  **Restructuration du Catalogue** : Identifier des thématiques latentes (cachées) pour créer de nouvelles catégories de navigation (ex: "Gamme Éco-Responsable", "Protection Solaire").
+1. **Systeme de recommandation** -- Suggerer des produits similaires a un client consultant une fiche produit ("Vous aimerez aussi...").
+2. **Restructuration du catalogue** -- Identifier des thematiques latentes dans les descriptions afin de proposer de nouvelles categories de navigation.
 
-Ce projet utilise des techniques de **NLP (Natural Language Processing)** et d'**Apprentissage Non Supervisé** pour traiter les descriptions textuelles non structurées.
+Le projet combine du **NLP** (tokenisation, lemmatisation, TF-IDF) et de l'**apprentissage non supervise** (clustering DBSCAN, topic modeling LSA) pour repondre a ces deux objectifs.
 
-## 🏗️ Architecture Technique (Pipeline)
+## Dataset
 
-Le projet suit un pipeline de traitement de données strict :
+| Propriete | Valeur |
+|-----------|--------|
+| Source | [Kaggle -- Product Item Data](https://www.kaggle.com/cclark/product-item-data?select=sample-data.csv) |
+| Nombre de produits | 500 |
+| Colonnes | `id`, `description` |
+| Langue | Anglais |
 
-### 1. Preprocessing (NLP)
-Nettoyage des descriptions brutes pour réduire le bruit et la dimensionnalité :
-* **Tokenization** : Découpage des phrases en mots.
-* **Stop Words Removal** : Suppression des mots courants sans valeur sémantique (le, la, the, and...).
-* **Lemmatization** : Normalisation des mots (ex: "running", "runs" → "run") via la librairie **Spacy**.
+Le fichier `sample-data.csv` est place dans `data/raw/`.
+Le dossier `data/` est gitignore : telecharger le CSV depuis Kaggle et le placer manuellement dans `data/raw/`.
 
-### 2. Feature Extraction
-Transformation du texte en vecteurs numériques interprétables par la machine :
-* **TF-IDF (Term Frequency - Inverse Document Frequency)** : Cette méthode pondère les mots. Elle donne plus d'importance aux mots rares et spécifiques (ex: "Gore-Tex", "Merino") qu'aux mots génériques (ex: "shirt", "wear").
+## Installation
 
-### 3. Modélisation Non Supervisée
-* **Clustering (DBSCAN)** : Regroupement des produits par densité.
-    * *Avantage* : Gère les "outliers" (bruit) et ne nécessite pas de définir le nombre de clusters à l'avance.
-    * *Métrique* : Distance Cosinus (adaptée aux espaces textuels).
-* **Topic Modeling (LSA/TruncatedSVD)** : Réduction de dimension pour extraire les sujets principaux du corpus.
+```bash
+# 1. Cloner le depot
+git clone https://github.com/athanormark/THE_NORTH_FACE-_-BLOC-3_JEDHA_FORMATION.git
+cd THE_NORTH_FACE-_-BLOC-3_JEDHA_FORMATION
 
-## 📊 Analyse des Résultats
+# 2. Creer un environnement virtuel
+conda create --name the_north_face python=3.13
+conda activate the_north_face
 
-### 1. Clustering & Recommandation
-Après optimisation des hyperparamètres (`eps=0.4`, `min_samples=3`), nous avons obtenu :
-* **36 Clusters distincts** regroupant des produits très similaires.
-* **Réduction du bruit** : Le nombre d'articles non classés est passé de ~400 à 268.
+# 3. Installer les dependances
+pip install -r requirements.txt
 
-**Exemple de fonctionnement :**
-Lorsqu'un utilisateur consulte le produit *ID 19 (Cap 1 Graphic T-shirt)*, l'algorithme recommande avec succès d'autres produits de la gamme "Cap 1" (Kids, Scoop, etc.), prouvant la capacité du modèle à comprendre les gammes de produits.
+# 4. Telecharger le modele de langue spaCy
+python -m spacy download en_core_web_sm
 
-### 2. Thèmes Latents (Topic Modeling)
-L'analyse LSA a permis de faire émerger des catégories qui ne sont pas explicitement dans le catalogue, offrant des opportunités marketing :
-* **Topic "Éco-Responsable"** : Mots clés `organic`, `cotton`, `recyclable`, `threads`.
-* **Topic "Technique Hiver"** : Mots clés `merino`, `wool`, `insulation`.
-* **Topic "Protection Solaire"** : Mots clés `sun`, `upf`, `protection`, `skin`.
+# 5. Lancer le notebook
+jupyter notebook notebooks/01_EDA_and_Modeling.ipynb
+```
 
-## 🚀 Guide d'Installation
+## Pipeline technique
 
-Pour reproduire cette analyse en local :
+### 1. Preprocessing NLP
+- Tokenisation, suppression des stop words, lemmatisation via **spaCy** (`en_core_web_sm`).
+- Vectorisation **TF-IDF** (`max_features=1000`) produisant une matrice (500 x 1000).
 
-1.  **Cloner le dépôt :**
-    ```bash
-    git clone [https://github.com/votre-username/TheNorthFace_Recommendation.git](https://github.com/votre-username/TheNorthFace_Recommendation.git)
-    cd TheNorthFace_Recommendation
-    ```
+### 2. Clustering DBSCAN
+- Metrique : distance cosinus.
+- Deux iterations de tuning sur `eps` (`min_samples=3`) :
 
-2.  **Créer l'environnement virtuel (recommandé avec Conda) :**
-    ```bash
-    conda create --name the_north_face python=3.8
-    conda activate the_north_face
-    ```
+| eps | Clusters | Outliers | Commentaire |
+|-----|----------|----------|-------------|
+| 0.2 | 19 | 401 (80 %) | Trop restrictif |
+| **0.63** | **17** | **20 (4 %)** | Cible atteinte (10-20 clusters) |
 
-3.  **Installer les dépendances :**
-    ```bash
-    # Installation des librairies via pip
-    pip install -r requirements.txt
-    
-    # Téléchargement du modèle de langue anglaise pour Spacy
-    python -m spacy download en_core_web_sm
-    ```
+Principaux clusters identifies :
+- **Cluster 1** (295 produits) -- Vetements eco-responsables : `recyclable`, `organic`, `cotton`.
+- **Cluster 0** (61 produits) -- Baselayers techniques : `gladiodor`, `odor`, `natural`.
+- **Cluster 2** (28 produits) -- Sacs et accessoires : `pocket`, `shoulder`, `strap`.
 
-4.  **Lancer le Notebook :**
-    ```bash
-    jupyter notebook notebooks/01_EDA_and_Modeling.ipynb
-    ```
+### 3. Systeme de recommandation
+La fonction `find_similar_items(item_id)` retourne 5 produits du meme cluster.
+Interface interactive via `input()`.
 
-## 📂 Structure du Projet
+### 4. Topic Modeling (LSA / TruncatedSVD)
+- `TruncatedSVD(n_components=10)` -- Variance expliquee : 25.1 %.
+- Topic dominant extrait par document.
+- Visualisation par WordClouds.
+
+## Resultats
+
+| Topic | Mots-cles | Interpretation | Produits |
+|-------|-----------|----------------|----------|
+| 1 | `organic`, `cotton`, `recyclable` | Eco-responsable | 301 |
+| 2 | `shirt`, `ringspun`, `phthalate`, `ink` | Serigraphie | 33 |
+| 3 | `merino`, `odor`, `gladiodor`, `wool` | Laine technique | 38 |
+| 4 | `button`, `canvas`, `jean`, `welt` | Casual coton | 21 |
+| 5 | `merino`, `wool`, `wash`, `chlorine` | Entretien laine | 17 |
+| 6 | `sun`, `upf`, `nylon`, `protection` | Protection solaire | 7 |
+| 7 | `strap`, `pocket`, `mesh`, `compartment` | Sacs et rangement | 28 |
+| 8 | `spandex`, `tencel`, `bra`, `dress` | Vetements femme | 37 |
+| 9 | `photo`, `poster`, `outdoor`, `retail` | Marketing/retail | 8 |
+| 10 | `sun`, `upf`, `collar`, `rashguard` | Protection UV | 10 |
+
+## Structure du projet
 
 ```text
 TheNorthFace_Recommendation/
-│
-├── data/
-│   ├── raw/             # Données sources (sample-data.csv)
-│   └── processed/       # Matrices TF-IDF sauvegardées (optionnel)
-│
-├── notebooks/
-│   └── 01_EDA_and_Modeling.ipynb  # Notebook principal (Nettoyage, Clustering, LSA)
-│
-├── assets/
-│   └── images/          # Captures d'écran, WordClouds pour le rapport
-│
-├── requirements.txt     # Liste des dépendances
-└── README.md            # Documentation du projet
+|
+|-- data/
+|   |-- raw/                # Donnees sources (sample-data.csv)
+|   +-- processed/          # Matrices sauvegardees (optionnel)
+|
+|-- notebooks/
+|   +-- 01_EDA_and_Modeling.ipynb   # Notebook principal
+|
+|-- assets/
+|   +-- images/             # Captures, WordClouds
+|
+|-- requirements.txt        # Dependances Python
+|-- .gitignore
++-- README.md
 ```
 
-## 👤 Auteur
-Athanor SAVOUILLAN
+## Auteur
+
+Athanor SAVOUILLAN · [GitHub](https://github.com/athanormark)
