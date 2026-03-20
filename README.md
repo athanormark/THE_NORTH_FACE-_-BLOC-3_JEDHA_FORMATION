@@ -1,10 +1,13 @@
 # The North Face E-Commerce -- Recommandation et Topic Modeling
 
-![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat&logo=python&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626?style=flat&logo=jupyter&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
-![spaCy](https://img.shields.io/badge/spaCy-09A3D5?style=flat&logo=spacy&logoColor=white)
+[![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat&logo=python&logoColor=fff)](#)
+[![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=flat&logo=jupyter&logoColor=fff)](#)
+[![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=fff)](#)
+[![scikit--learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=fff)](#)
+[![spaCy](https://img.shields.io/badge/spaCy-09A3D5?style=flat&logo=spacy&logoColor=fff)](#)
+[![JEDHA](https://img.shields.io/badge/JEDHA-blueviolet?style=flat)](#)
+
+---
 
 ## About
 
@@ -14,6 +17,8 @@ The North Face souhaite exploiter les descriptions de son catalogue produit pour
 2. **Restructuration du catalogue** -- Identifier des thematiques latentes dans les descriptions afin de proposer de nouvelles categories de navigation.
 
 Le projet combine du **NLP** (tokenisation, lemmatisation, TF-IDF) et de l'**apprentissage non supervise** (clustering DBSCAN, topic modeling LSA) pour repondre a ces deux objectifs.
+
+---
 
 ## Dataset
 
@@ -26,6 +31,8 @@ Le projet combine du **NLP** (tokenisation, lemmatisation, TF-IDF) et de l'**app
 
 Le fichier `sample-data.csv` est place dans `data/raw/`.
 Le dossier `data/` est gitignore : telecharger le CSV depuis Kaggle et le placer manuellement dans `data/raw/`.
+
+---
 
 ## Installation
 
@@ -48,7 +55,9 @@ python -m spacy download en_core_web_sm
 jupyter notebook notebooks/01_EDA_and_Modeling.ipynb
 ```
 
-## Pipeline technique
+---
+
+## Pipeline
 
 ### 1. Preprocessing NLP
 - Tokenisation, suppression des stop words, lemmatisation via **spaCy** (`en_core_web_sm`).
@@ -77,6 +86,8 @@ Interface interactive via `input()`.
 - Topic dominant extrait par document.
 - Visualisation par WordClouds.
 
+---
+
 ## Resultats
 
 | Topic | Mots-cles | Interpretation | Produits |
@@ -91,6 +102,20 @@ Interface interactive via `input()`.
 | 8 | `spandex`, `tencel`, `bra`, `dress` | Vetements femme | 37 |
 | 9 | `photo`, `poster`, `outdoor`, `retail` | Marketing/retail | 8 |
 | 10 | `sun`, `upf`, `collar`, `rashguard` | Protection UV | 10 |
+
+---
+
+## Conclusion
+
+Le projet repond aux deux objectifs poses par The North Face :
+
+**1. Systeme de recommandation** : DBSCAN avec distance cosinus identifie 17 clusters thematiques (4% d'outliers). Le cluster dominant regroupe les vetements eco-responsables (295 produits sur 500). La fonction `find_similar_items(item_id)` retourne 5 produits du meme cluster, exploitable en production pour un bloc "Vous aimerez aussi".
+
+**2. Restructuration du catalogue** : LSA (10 composantes, 25.1% de variance expliquee) extrait des topics interpretables : eco-responsable, serigraphie, laine technique, protection UV, sacs et rangement. Ces thematiques peuvent alimenter de nouvelles categories de navigation sur le site e-commerce.
+
+**Limites** : le dataset est restreint (500 produits), la variance expliquee par LSA est faible (normal en NLP haute dimension), et aucune metrique de qualite de clustering (Silhouette Score) n'a ete calculee.
+
+---
 
 ## Structure du projet
 
@@ -111,6 +136,8 @@ TheNorthFace_Recommendation/
 |-- .gitignore
 +-- README.md
 ```
+
+---
 
 ## Auteur
 
